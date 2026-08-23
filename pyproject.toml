@@ -37,6 +37,17 @@ classifiers = [
 Homepage = "https://github.com/liminastra/liminastra"
 Repository = "https://github.com/liminastra/liminastra"
 Issues = "https://github.com/liminastra/liminastra/issues"
+Documentation = "https://liminastra.readthedocs.io"
+
+# --- Docs -------------------------------------------------------------
+# Installed by Read the Docs via `pip install .[docs]` (see .readthedocs.yaml).
+
+[project.optional-dependencies]
+docs = [
+    "sphinx>=7.2",
+    "myst-parser>=3.0",
+    "furo>=2024.8.6",
+]
 
 [build-system]
 requires = ["uv_build>=0.12.5,<0.13.0"]
@@ -89,6 +100,7 @@ convention = "numpy"
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["D"]
 "benchmarks/*" = ["D"]
+"docs/conf.py" = ["A001"]  # Sphinx requires the variable name `copyright`
 
 
 # --- Mypy -------------------------------------------------------------
