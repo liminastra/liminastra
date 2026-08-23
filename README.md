@@ -1,3 +1,5 @@
+[![ci](https://github.com/liminastra/liminastra/actions/workflows/ci.yml/badge.svg)](https://github.com/liminastra/liminastra/actions/workflows/ci.yml)
+
 # liminastra
 
 **Limiting magnitudes for visual observers and digital detectors.**
