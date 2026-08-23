@@ -1,13 +1,42 @@
 [project]
 name = "liminastra"
-version = "0.1.0"
-description = "Add your description here"
+version = "0.1.1"
+description = "Limiting magnitude calculator for visual observers and CCD/CMOS detectors: sky brightness, exposure time, and detection thresholds."
 readme = "README.md"
-authors = [
-    { name = "veryoldphotons", email = "veryoldphotons@users.noreply.github.com" }
-]
 requires-python = ">=3.11"
-dependencies = []
+license = "BSD-3-Clause"
+license-files = ["LICENSE"]
+authors = [{ name = "Michael Smith", email = "veryoldphotons@gmail.com" }]
+keywords = [
+    "astronomy",
+    "astrophotography",
+    "limiting magnitude",
+    "naked eye limiting magnitude",
+    "sky brightness",
+    "light pollution",
+    "photometry",
+    "exposure time calculator",
+    "signal to noise",
+    "CCD",
+    "CMOS",
+    "visual astronomy",
+]
+classifiers = [
+    "Development Status :: 1 - Planning",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: End Users/Desktop",
+    "Topic :: Scientific/Engineering :: Astronomy",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/liminastra/liminastra"
+Repository = "https://github.com/liminastra/liminastra"
+Issues = "https://github.com/liminastra/liminastra/issues"
 
 [build-system]
 requires = ["uv_build>=0.12.5,<0.13.0"]
