@@ -41,3 +41,143 @@ Issues = "https://github.com/liminastra/liminastra/issues"
 [build-system]
 requires = ["uv_build>=0.12.5,<0.13.0"]
 build-backend = "uv_build"
+
+# --- Dev dependencies -------------------------------------------------
+# Installed by `uv sync --group dev`. Not shipped to users.
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "mypy>=1.11",
+    "ruff>=0.6",
+    "import-linter>=2.0",
+]
+
+
+# --- Ruff: lint + format ---------------------------------------------
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests", "benchmarks"]
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes
+    "I",    # isort — import ordering
+    "N",    # pep8-naming
+    "UP",   # pyupgrade
+    "B",    # bugbear — likely bugs
+    "A",    # builtin shadowing
+    "C4",   # comprehensions
+    "SIM",  # simplify
+    "RUF",  # ruff-specific
+    "NPY",  # numpy-specific
+    "D",    # pydocstyle
+]
+ignore = [
+    "E741",  # ambiguous name — physics uses l, I, O legitimately
+    "D105",  # missing docstring in magic method
+    "D107",  # missing docstring in __init__
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["D"]
+"benchmarks/*" = ["D"]
+
+
+# --- Mypy -------------------------------------------------------------
+# Strict on the library, lenient on tests.
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_unreachable = true
+show_error_codes = true
+
+[[tool.mypy.overrides]]
+module = ["tests.*", "benchmarks.*"]
+disallow_untyped_defs = false
+
+[[tool.mypy.overrides]]
+module = ["nicegui.*", "pywebview.*"]
+ignore_missing_imports = true
+
+
+# --- Pytest -----------------------------------------------------------
+
+[tool.pytest.ini_options]
+testpaths = ["tests", "benchmarks"]
+addopts = "--strict-markers --strict-config -ra"
+markers = [
+    "benchmark: validates against a published value from the literature",
+    "slow: takes more than a second",
+    "network: requires network access (skipped by default in CI)",
+]
+filterwarnings = ["error"]
+
+
+# --- Import Linter: the layering contracts (D-004) --------------------
+# Run with `lint-imports`. This is what makes the architecture real
+# rather than aspirational.
+
+[tool.importlinter]
+root_package = "liminastra"
+include_external_packages = true
+
+# Contract 1: the layer stack.
+# Higher layers may import lower ones. Never the reverse.
+[[tool.importlinter.contracts]]
+name = "Adapters depend on core; core never depends on adapters"
+type = "layers"
+layers = [
+    "liminastra.cli | liminastra.web",
+    "liminastra.visual | liminastra.digital",
+    "liminastra.sky",
+    "liminastra.data",
+]
+
+# Contract 2: the two heads stay independent.
+# The visual model must not reach into detector code, or vice versa.
+# They meet only at the sky model beneath them.
+[[tool.importlinter.contracts]]
+name = "Visual and digital heads are independent"
+type = "independence"
+modules = [
+    "liminastra.visual",
+    "liminastra.digital",
+]
+
+# Contract 3: the CLI and the web app never import each other.
+[[tool.importlinter.contracts]]
+name = "Frontends are independent of each other"
+type = "independence"
+modules = [
+    "liminastra.cli",
+    "liminastra.web",
+]
+
+# Contract 4: only the data layer touches the outside world.
+# Physics code must stay pure — no I/O, no network, no filesystem.
+[[tool.importlinter.contracts]]
+name = "Core physics does no I/O"
+type = "forbidden"
+source_modules = [
+    "liminastra.visual",
+    "liminastra.digital",
+    "liminastra.sky",
+]
+forbidden_modules = [
+    "requests",
+    "httpx",
+    "urllib",
+    "pathlib",
+    "os",
+    "shutil",
+]
+ignore_imports = []
