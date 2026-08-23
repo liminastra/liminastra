@@ -27,7 +27,7 @@ overlap in class. **Accepted cost:** English speakers may drift toward the more 
 root when recalling the name, so documentation and metadata carry the searchable terms instead.
 
 ## D-011 — License
-**Date:** TBD · **Status:** Open
+**Date:** TBD · **Status:** Settled
 
 MIT or BSD-3. Leaning BSD-3 for the explicit non-endorsement clause, which matters slightly more
 for a package that will be cited in papers. Decide before the first public commit.
